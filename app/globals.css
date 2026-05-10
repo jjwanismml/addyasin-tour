@@ -1,0 +1,159 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --gold-light: #F3E5AB;
+  --gold: #D4AF37;
+  --gold-dark: #AA771C;
+  --gold-deep: #8A5A19;
+  --ink: #020202;
+}
+
+html,
+body {
+  background: var(--ink);
+  color: #e5e5e5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Metalik Altın Gradyan (Ultra VIP) */
+.gold-text-gradient {
+  background: linear-gradient(135deg, #F3E5AB 0%, #D4AF37 30%, #AA771C 70%, #F3E5AB 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  background-size: 200% auto;
+  animation: shineGold 6s linear infinite;
+}
+
+.gold-bg-gradient {
+  background: linear-gradient(135deg, #D4AF37 0%, #AA771C 50%, #8A5A19 100%);
+}
+
+.gold-border-gradient {
+  position: relative;
+}
+.gold-border-gradient::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(to bottom right, #D4AF37, transparent, #AA771C);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+@keyframes shineGold {
+  to {
+    background-position: 200% center;
+  }
+}
+
+@keyframes zoomOut {
+  from { transform: scale(1.15); }
+  to { transform: scale(1.05); }
+}
+
+/* Film Grain */
+.film-grain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9997;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Sinematik Açılış (Scroll) */
+.cinematic-reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  will-change: opacity, transform;
+}
+.cinematic-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+.d-100 { transition-delay: 100ms; }
+.d-200 { transition-delay: 200ms; }
+.d-300 { transition-delay: 300ms; }
+
+/* Karaoke Text Animasyonu (Scroll ile Opacity) */
+.karaoke-text {
+  opacity: 0.15;
+  transition: opacity 0.6s ease-out;
+  will-change: opacity;
+}
+.karaoke-text.revealed {
+  opacity: 1;
+}
+
+/* Marquee */
+.marquee-wrapper {
+  overflow: hidden;
+  white-space: nowrap;
+  display: flex;
+  width: 100%;
+  border-top: 1px solid rgba(212, 175, 55, 0.1);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+  padding: 15px 0;
+}
+.marquee-content {
+  display: flex;
+  animation: marquee 30s linear infinite;
+}
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Metin Maskeleme (Açılış için) */
+.text-mask {
+  overflow: hidden;
+  display: block;
+}
+.text-mask span {
+  display: block;
+  transform: translateY(110%);
+  transition: transform 1.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+body.intro-loaded .text-mask span,
+.revealed .text-mask span {
+  transform: translateY(0);
+}
+
+/* Arka Plan Görsel Geçişi (Collection) */
+.bg-crossfade {
+  transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 12s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Mobil Menü Animasyonları */
+.menu-link-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.menu-open .menu-link-reveal {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+::selection {
+  background: #D4AF37;
+  color: #020202;
+}

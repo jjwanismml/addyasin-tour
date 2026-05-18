@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem C:\\\\Users\\\\emreg\\\\addyasin-tour *)",
+      "Bash(dir C:\\\\Users\\\\emreg\\\\addyasin-tour *)",
+      "Bash(dir C:\\\\Users\\\\emreg\\\\addyasin-tour\\\\public *)"
+    ]
+  }
+}

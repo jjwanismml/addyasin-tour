@@ -163,10 +163,25 @@ export default function Footer() {
           <div className="mb-10 flex justify-center">
             <SocialIconLinks variant="compact" className="scale-110" />
           </div>
-          <div className="flex flex-col items-center justify-between gap-4 border-t border-white/5 pt-8 text-[9px] uppercase tracking-[0.2em] text-gray-600 md:flex-row md:gap-0 lg:text-[10px]">
+          <div className="flex flex-col items-center justify-between gap-6 border-t border-white/5 pt-8 text-[9px] uppercase tracking-[0.2em] text-gray-600 md:flex-row md:gap-0 lg:text-[10px]">
           <p className="mb-0 text-center md:text-left">
             &copy; {year} Adda Tours. All Rights Reserved.
           </p>
+          <a
+            href="https://addatours.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex flex-col items-center gap-2 opacity-70 transition-opacity hover:opacity-100"
+          >
+            <img
+              src="/adda-logo.png"
+              alt="ADDA Group – Luxury Lycia Travel"
+              className="h-14 w-auto"
+            />
+            <span className="text-[9px] tracking-[0.2em] text-[#D4AF37] lg:text-[10px]">
+              addatours.com
+            </span>
+          </a>
           <div className="flex flex-wrap justify-center gap-4 lg:gap-6">
             <span>Member of TURSAB</span>
             <span>Luxury Operator</span>

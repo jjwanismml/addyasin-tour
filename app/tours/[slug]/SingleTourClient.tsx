@@ -1,8 +1,35 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ArrowUpRight, Clock, Users, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { ArrowUpRight, Clock, Users, CheckCircle2, AlertTriangle, ChevronDown, MessageCircle, Car } from 'lucide-react';
 import type { Tour } from '@/lib/data';
+import { urlWhatsAppTourBooking } from '@/lib/booking-links';
+
+function FaqItem({ question, answer }: { question: string; answer: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="py-5 md:py-6">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="w-full flex items-start justify-between gap-4 text-left group"
+        aria-expanded={open}
+      >
+        <span className="text-gray-200 font-light text-sm md:text-[15px] leading-relaxed group-hover:text-white transition-colors">
+          {question}
+        </span>
+        <ChevronDown
+          className={`w-4 h-4 text-[#D4AF37] flex-shrink-0 mt-1 transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
+          strokeWidth={1.5}
+        />
+      </button>
+      {open && (
+        <p className="mt-4 text-gray-400 font-light text-sm md:text-[15px] leading-[2] md:leading-[2.2]">
+          {answer}
+        </p>
+      )}
+    </div>
+  );
+}
 
 export default function SingleTourClient({ tour }: { tour: Tour }) {
   const [guests, setGuests] = useState(2);
@@ -137,6 +164,44 @@ export default function SingleTourClient({ tour }: { tour: Tour }) {
                 </ul>
               </div>
             </section>
+
+            {/* SECTION 5: FAQ */}
+            {tour.faqs && tour.faqs.length > 0 && (
+              <section className="cinematic-reveal">
+                <p className="text-[8px] md:text-[9px] uppercase tracking-[0.5em] mb-6 md:mb-10 gold-text-gradient">
+                  FAQ
+                </p>
+                <h2 className="font-serif text-3xl md:text-5xl text-white font-light leading-[1.1] mb-10">
+                  Frequently Asked <i className="gold-text-gradient">Questions</i>
+                </h2>
+                <div className="space-y-0 divide-y divide-[#D4AF37]/10">
+                  {tour.faqs.map((faq, idx) => (
+                    <FaqItem key={idx} question={faq.question} answer={faq.answer} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* SECTION 6: TRANSFER CTA */}
+            <section className="cinematic-reveal">
+              <div className="border border-[#D4AF37]/20 p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-10 gold-border-gradient">
+                <Car className="w-8 h-8 text-[#D4AF37] flex-shrink-0" strokeWidth={1} />
+                <div className="flex-1">
+                  <p className="text-white font-serif text-xl md:text-2xl font-light mb-1">
+                    Need a transfer to or from the airport?
+                  </p>
+                  <p className="text-gray-400 font-light text-sm leading-relaxed">
+                    We offer private airport transfers from Dalaman and Antalya airports to Kalkan, with flight tracking and 24/7 availability.
+                  </p>
+                </div>
+                <a
+                  href="/vip-transfer/"
+                  className="flex-shrink-0 text-[#D4AF37] text-[9px] uppercase tracking-[0.3em] border-b border-[#D4AF37]/40 pb-1 hover:border-[#D4AF37] transition-all whitespace-nowrap"
+                >
+                  View Transfer &amp; Car Hire →
+                </a>
+              </div>
+            </section>
           </div>
 
           {/* RIGHT COLUMN: STICKY BOOKING CARD */}
@@ -199,10 +264,19 @@ export default function SingleTourClient({ tour }: { tour: Tour }) {
                   )}
 
                   <a
-                    href="/contact/"
-                    className="block w-full text-center py-4 border border-[#D4AF37]/40 text-[#D4AF37] text-[10px] uppercase tracking-[0.3em] hover:bg-[#D4AF37] hover:text-[#020202] transition-all duration-700"
+                    href={urlWhatsAppTourBooking(tour.title, tour.slug)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-3 w-full text-center py-4 bg-[#25D366] text-[#020202] text-[10px] uppercase tracking-[0.3em] hover:brightness-110 transition-all duration-300 font-medium mb-3"
                   >
-                    Request Reservation
+                    <MessageCircle className="w-4 h-4" strokeWidth={2} />
+                    Book via WhatsApp
+                  </a>
+                  <a
+                    href="/contact/"
+                    className="block w-full text-center py-3 border border-[#D4AF37]/30 text-gray-400 text-[9px] uppercase tracking-[0.3em] hover:border-[#D4AF37]/60 hover:text-[#D4AF37] transition-all duration-500"
+                  >
+                    Send Enquiry
                   </a>
                 </div>
               </div>

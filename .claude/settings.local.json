@@ -3,7 +3,13 @@
     "allow": [
       "Bash(Get-ChildItem C:\\\\Users\\\\emreg\\\\addyasin-tour *)",
       "Bash(dir C:\\\\Users\\\\emreg\\\\addyasin-tour *)",
-      "Bash(dir C:\\\\Users\\\\emreg\\\\addyasin-tour\\\\public *)"
+      "Bash(dir C:\\\\Users\\\\emreg\\\\addyasin-tour\\\\public *)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\emreg\\\\addyasin-tour\" -Force)",
+      "Bash(Select-Object Name, PSIsContainer)",
+      "Bash(npx tsc *)",
+      "Bash(node_modules\\\\.bin\\\\tsc *)",
+      "Read(//mnt/c/Users/emreg/**)",
+      "Bash(./node_modules/.bin/tsc --noEmit)"
     ]
   }
 }

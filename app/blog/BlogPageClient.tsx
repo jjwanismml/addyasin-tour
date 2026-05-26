@@ -2,10 +2,44 @@
 
 import { type BlogPost } from '@/lib/blog-api';
 import { Calendar, Clock, ArrowUpRight } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-export default function BlogPageClient({ posts }: { posts: BlogPost[] }) {
+const CMS_URL = process.env.NEXT_PUBLIC_BLOG_API_URL ?? '';
+const API_KEY = process.env.NEXT_PUBLIC_BLOG_API_KEY ?? '';
+const SITE_SLUG = 'addatours-yasin';
+
+function mapPost(p: Record<string, unknown>): BlogPost {
+  return {
+    id: p.id as string,
+    slug: p.slug as string,
+    title: p.title as string,
+    excerpt: (p.excerpt as string) ?? '',
+    content: (p.content as string) ?? '',
+    image: (p.coverImageUrl as string) ?? '',
+    date: p.publishedAt ? (p.publishedAt as string).slice(0, 10) : '',
+    readTime: '5 min read',
+    category: ((p.tags as string[])?.[0]) ?? 'Travel',
+    author: (p.author as string) ?? 'Yasin Çelik',
+    tags: (p.tags as string[]) ?? [],
+    metaTitle: (p.metaTitle as string) ?? null,
+    metaDescription: (p.metaDescription as string) ?? null,
+  };
+}
+
+export default function BlogPageClient({ posts: initialPosts }: { posts: BlogPost[] }) {
+  const [posts, setPosts] = useState<BlogPost[]>(initialPosts);
+
   useEffect(() => {
+    if (!CMS_URL || !API_KEY) return;
+    fetch(`${CMS_URL}/api/public/posts?site=${SITE_SLUG}`, {
+      headers: { 'x-api-key': API_KEY },
+    })
+      .then(r => r.ok ? r.json() : [])
+      .then((data: Record<string, unknown>[]) => {
+        if (Array.isArray(data) && data.length > 0) setPosts(data.map(mapPost));
+      })
+      .catch(() => {});
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -61,71 +95,77 @@ export default function BlogPageClient({ posts }: { posts: BlogPost[] }) {
       {/* BLOG GRID */}
       <section className="py-24 md:py-40 px-6 md:px-16">
         <div className="max-w-screen-2xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
-            {posts.map((post, idx) => (
-              <article
-                key={post.id}
-                className="group cinematic-reveal"
-                style={{ transitionDelay: `${idx * 100}ms` }}
-              >
-                <a href={`/blog/${post.slug}`} className="block h-full">
-                  <div className="gold-border-gradient p-1 h-full">
-                    <div className="bg-[#050505] h-full flex flex-col hover:bg-[#0a0a0a] transition-colors duration-700">
-                      {/* Image */}
-                      <div className="aspect-[4/3] overflow-hidden relative">
-                        <img
-                          src={post.image}
-                          alt={post.title}
-                          className="w-full h-full object-cover filter grayscale-[30%] group-hover:grayscale-0 transition-all duration-1000 scale-105 group-hover:scale-100"
-                          loading="lazy"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#020202] via-transparent to-transparent opacity-60"></div>
-                      </div>
-
-                      {/* Content */}
-                      <div className="p-6 md:p-8 flex flex-col flex-grow">
-                        <div className="mb-4">
-                          <span className="text-[8px] md:text-[9px] uppercase tracking-[0.4em] text-[#D4AF37]">
-                            {post.category}
-                          </span>
+          {posts.length === 0 ? (
+            <div className="flex justify-center items-center py-20">
+              <div className="w-8 h-8 border-2 border-[#D4AF37] border-t-transparent rounded-full animate-spin" aria-hidden="true" />
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
+              {posts.map((post, idx) => (
+                <article
+                  key={post.id}
+                  className="group cinematic-reveal"
+                  style={{ transitionDelay: `${idx * 100}ms` }}
+                >
+                  <a href={`/blog/${post.slug}`} className="block h-full">
+                    <div className="gold-border-gradient p-1 h-full">
+                      <div className="bg-[#050505] h-full flex flex-col hover:bg-[#0a0a0a] transition-colors duration-700">
+                        {/* Image */}
+                        <div className="aspect-[4/3] overflow-hidden relative">
+                          <img
+                            src={post.image}
+                            alt={post.title}
+                            className="w-full h-full object-cover filter grayscale-[30%] group-hover:grayscale-0 transition-all duration-1000 scale-105 group-hover:scale-100"
+                            loading="lazy"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#020202] via-transparent to-transparent opacity-60"></div>
                         </div>
 
-                        <h2 className="font-serif text-xl md:text-2xl text-white font-light leading-tight mb-4 group-hover:text-[#D4AF37] transition-colors">
-                          {post.title}
-                        </h2>
-
-                        <p className="text-gray-400 font-light text-sm leading-relaxed mb-6 flex-grow">
-                          {post.excerpt}
-                        </p>
-
-                        <div className="flex items-center gap-6 text-xs md:text-sm text-gray-500 font-light">
-                          <div className="flex items-center gap-2">
-                            <Calendar className="w-3 h-3" strokeWidth={1.5} />
-                            <span>
-                              {new Date(post.date).toLocaleDateString('en-US', {
-                                month: 'short',
-                                day: 'numeric',
-                                year: 'numeric',
-                              })}
+                        {/* Content */}
+                        <div className="p-6 md:p-8 flex flex-col flex-grow">
+                          <div className="mb-4">
+                            <span className="text-[8px] md:text-[9px] uppercase tracking-[0.4em] text-[#D4AF37]">
+                              {post.category}
                             </span>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <Clock className="w-3 h-3" strokeWidth={1.5} />
-                            <span>{post.readTime}</span>
-                          </div>
-                        </div>
 
-                        <div className="mt-6 pt-6 border-t border-[#D4AF37]/20 flex items-center gap-3 text-[#D4AF37] text-[10px] uppercase tracking-[0.3em] group-hover:gap-4 transition-all">
-                          <span>Read More</span>
-                          <ArrowUpRight className="w-4 h-4" strokeWidth={1} />
+                          <h2 className="font-serif text-xl md:text-2xl text-white font-light leading-tight mb-4 group-hover:text-[#D4AF37] transition-colors">
+                            {post.title}
+                          </h2>
+
+                          <p className="text-gray-400 font-light text-sm leading-relaxed mb-6 flex-grow">
+                            {post.excerpt}
+                          </p>
+
+                          <div className="flex items-center gap-6 text-xs md:text-sm text-gray-500 font-light">
+                            <div className="flex items-center gap-2">
+                              <Calendar className="w-3 h-3" strokeWidth={1.5} />
+                              <span>
+                                {new Date(post.date).toLocaleDateString('en-US', {
+                                  month: 'short',
+                                  day: 'numeric',
+                                  year: 'numeric',
+                                })}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Clock className="w-3 h-3" strokeWidth={1.5} />
+                              <span>{post.readTime}</span>
+                            </div>
+                          </div>
+
+                          <div className="mt-6 pt-6 border-t border-[#D4AF37]/20 flex items-center gap-3 text-[#D4AF37] text-[10px] uppercase tracking-[0.3em] group-hover:gap-4 transition-all">
+                            <span>Read More</span>
+                            <ArrowUpRight className="w-4 h-4" strokeWidth={1} />
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </a>
-              </article>
-            ))}
-          </div>
+                  </a>
+                </article>
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </main>

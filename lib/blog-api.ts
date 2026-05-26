@@ -40,7 +40,7 @@ export async function getPublishedPosts(): Promise<BlogPost[]> {
   try {
     const res = await fetch(`${CMS_URL}/api/public/posts?site=${SITE_SLUG}`, {
       headers: { "x-api-key": API_KEY },
-      next: { revalidate: 3600, tags: ["blog-posts"] },
+      cache: "force-cache",
     });
     if (!res.ok) return [];
     const data = await res.json() as Record<string, unknown>[];
@@ -54,7 +54,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
   try {
     const res = await fetch(`${CMS_URL}/api/public/posts/${slug}?site=${SITE_SLUG}`, {
       headers: { "x-api-key": API_KEY },
-      next: { revalidate: 3600, tags: [`blog-post-${slug}`] },
+      cache: "force-cache",
     });
     if (!res.ok) return null;
     const data = await res.json() as Record<string, unknown>;

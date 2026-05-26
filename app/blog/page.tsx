@@ -1,9 +1,13 @@
-import { getPublishedPosts } from '@/lib/blog-api';
+// Blog listesi artık client-side fetch ile güncelleniyor (BlogPageClient)
+// Yeni CMS yazıları rebuild gerektirmeden anında görünür
 import BlogPageClient from './BlogPageClient';
 
-export const revalidate = 3600;
+export const metadata = {
+  title: 'Journal | ADDA Luxury Lycia Tours',
+  description: 'Stories, adventures and discoveries from the heart of the Turkish Riviera.',
+  alternates: { canonical: 'https://addatours.com/blog' },
+};
 
-export default async function BlogPage() {
-  const posts = await getPublishedPosts();
-  return <BlogPageClient posts={posts} />;
+export default function BlogPage() {
+  return <BlogPageClient posts={[]} />;
 }
